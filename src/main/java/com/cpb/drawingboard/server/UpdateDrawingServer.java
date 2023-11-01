@@ -11,34 +11,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint("/updateDrawing/{id}")
 @Component
 @Slf4j
 public class UpdateDrawingServer {
 
-    private Session session;
-
     private static final ConcurrentHashMap<String, String> history = new ConcurrentHashMap<>();
 
     private static final ConcurrentHashMap<String, ConcurrentHashMap<String, String>> dataMap = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<String, CopyOnWriteArraySet<UpdateDrawingServer>> webSocketSet = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Set<Session>> webSocketMap = new ConcurrentHashMap<>();
 
     @OnOpen
     public void onOpen(Session session, @PathParam("id") String id) throws IOException {
-        this.session = session;
-        if (webSocketSet.containsKey(id)) {
-            webSocketSet.get(id).add(this);
+        if (webSocketMap.containsKey(id)) {
+            webSocketMap.get(id).add(session);
         } else {
-            CopyOnWriteArraySet<UpdateDrawingServer> set = new CopyOnWriteArraySet<>();
-            set.add(this);
-            webSocketSet.put(id, set);
+            Set<Session> set = new HashSet<>();
+            set.add(session);
+            webSocketMap.put(id, set);
         }
-        log.info("onOpen " + id + "：{}", webSocketSet.get(id).size());
+        log.info("onOpen " + id + "：{}", webSocketMap.get(id).size());
         if (history.containsKey(id)) {
             session.getBasicRemote().sendText(history.get(id));
         }
@@ -46,8 +44,8 @@ public class UpdateDrawingServer {
 
     @OnClose
     public void onClose(@PathParam("id") String id) {
-        webSocketSet.get(id).remove(this);
-        log.info("onClose " + id + "：{}", webSocketSet.get(id).size());
+        webSocketMap.get(id).remove(this);
+        log.info("onClose " + id + "：{}", webSocketMap.get(id).size());
     }
 
     @OnMessage
@@ -80,11 +78,12 @@ public class UpdateDrawingServer {
 
     public static void sendAllMessage(String message, String id) {
         log.info("Send Message " + id);
-        for (UpdateDrawingServer webSocket : webSocketSet.get(id)) {
+        Set<Session> sessionSet = webSocketMap.get(id);
+        for (Session webSocket : sessionSet) {
             try {
-                webSocket.session.getBasicRemote().sendText(message);
-            } catch (IOException e) {
-                log.error("Error：" + e.getMessage(), e);
+                webSocket.getBasicRemote().sendText(message);
+            } catch (Exception e) {
+                sessionSet.remove(webSocket);
             }
         }
     }

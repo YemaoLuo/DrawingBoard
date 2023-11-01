@@ -227,26 +227,6 @@ body {
     background-size: 6vh;
 }
 
-#clear {
-    background: url('../img/brush.svg');
-    background-size: 6vh;
-}
-
-#clear:active {
-    box-shadow: 0 0 10px 2px royalblue;
-    /* background-color: royalblue; */
-}
-
-#return {
-    background: url('../img/return.svg');
-    background-size: 6vh;
-}
-
-#return:active {
-    box-shadow: 0 0 10px 2px royalblue;
-    /* background-color: royalblue; */
-}
-
 #save {
     background: url('../img/save.svg') no-repeat;
     background-size: 6vh;

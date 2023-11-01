@@ -9,9 +9,7 @@ let flag = false;
 let eraserState = false;
 let eraser = document.getElementById("eraser")
 let pen = document.getElementById("pen")
-let toolClear = document.getElementById('clear');
 let historyData = [];
-let toolReturn = document.getElementById("return");
 let penColorSelected = document.querySelector('.penColor')
 let penColorHidden = document.getElementById('penColor-hidden')
 let timer = null
@@ -224,34 +222,6 @@ pen.onclick = function () {
     penLineWidth = penWidth
     penColor = penColor2
 };
-
-toolClear.onclick = function () {
-    if (penColorHidden.style.display === "flex") {
-        penColorHidden.style.display = "none";
-    }
-    if (lineWidthHidden.style.display === "block") {
-        lineWidthHidden.style.display = "none";
-    }
-    if (historyData.length === 20) {
-        historyData.shift();
-    }
-    historyData.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-toolReturn.onclick = function () {
-    if (penColorHidden.style.display === "flex") {
-        penColorHidden.style.display = "none";
-    }
-    if (lineWidthHidden.style.display === "block") {
-        lineWidthHidden.style.display = "none";
-    }
-    if (historyData.length) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.putImageData(historyData[historyData.length - 1], 0, 0);
-        historyData.pop();
-    }
-}
 
 save.onclick = function () {
     if (penColorHidden.style.display === "flex") {
