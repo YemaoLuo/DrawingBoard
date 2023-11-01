@@ -244,13 +244,23 @@ socket.onopen = function (event) {
 };
 
 socket.onmessage = function (event) {
-    console.log("Received message:", event.data);
     const message = event.data;
-    const newImage = new Image();
-    newImage.src = message;
-    newImage.onload = function () {
-        ctx.drawImage(newImage, 0, 0);
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+        const arrayBuffer = event.target.result;
+        const uint8Array = new Uint8Array(arrayBuffer);
+
+        const decompressedData = pako.inflate(uint8Array, {to: 'string'});
+        console.log("Received message decompressed:", decompressedData);
+        const newImage = new Image();
+        newImage.src = decompressedData;
+        newImage.onload = function () {
+            ctx.drawImage(newImage, 0, 0);
+        };
     };
+
+    reader.readAsArrayBuffer(event.data);
 };
 
 socket.onclose = function (event) {

@@ -1,6 +1,7 @@
 package com.cpb.drawingboard.server;
 
 import com.alibaba.fastjson.JSON;
+import com.cpb.drawingboard.util.GzipUtils;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnMessage;
 import jakarta.websocket.OnOpen;
@@ -81,7 +82,8 @@ public class UpdateDrawingServer {
         Set<Session> sessionSet = webSocketMap.get(id);
         for (Session webSocket : sessionSet) {
             try {
-                webSocket.getBasicRemote().sendText(message);
+                byte[] compressed = GzipUtils.compressString(message);
+                webSocket.getBasicRemote().sendObject(compressed);
             } catch (Exception e) {
                 sessionSet.remove(webSocket);
             }
