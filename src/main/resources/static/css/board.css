@@ -28,7 +28,7 @@ body {
 }
 
 .penColor {
-    background: url('./img/color.svg');
+    background: url('../img/color.svg');
     background-size: 6vh;
     height: 6vh;
     width: 6vh;
@@ -218,17 +218,17 @@ body {
 }
 
 #pen {
-    background: url('./img/pen.svg');
+    background: url('../img/pen.svg');
     background-size: 6vh;
 }
 
 #eraser {
-    background: url('./img/eraser.svg');
+    background: url('../img/eraser.svg');
     background-size: 6vh;
 }
 
 #clear {
-    background: url('./img/brush.svg');
+    background: url('../img/brush.svg');
     background-size: 6vh;
 }
 
@@ -238,7 +238,7 @@ body {
 }
 
 #return {
-    background: url('./img/return.svg');
+    background: url('../img/return.svg');
     background-size: 6vh;
 }
 
@@ -248,7 +248,7 @@ body {
 }
 
 #save {
-    background: url('./img/save.svg') no-repeat;
+    background: url('../img/save.svg') no-repeat;
     background-size: 6vh;
 }
 

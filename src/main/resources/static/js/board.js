@@ -17,10 +17,18 @@ let penColorHidden = document.getElementById('penColor-hidden')
 let timer = null
 let save = document.getElementById('save')
 
+let url = new URL(window.location.href)
+const searchParams = new URLSearchParams(url.search)
+const id = searchParams.get('id')
+console.log("onload id=" + id);
+url = "ws://" + window.location.host + "/updateDrawing/" + id
+console.log("websocket url:" + url);
+const socket = new WebSocket(url);
+
+
 pen.classList.add('active');
 ctx.willReadFrequently = true;
 
-const socket = new WebSocket("ws://" + window.location.host + "/updateDrawing");
 
 function canvasSetSize() {
     let pageWidth = window.innerWidth;
